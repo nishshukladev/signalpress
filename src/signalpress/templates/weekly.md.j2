@@ -1,0 +1,42 @@
+# {{ config.name }} — Weekly Pattern Report — {{ date }}
+
+{% if warnings_block %}
+{{ warnings_block }}
+
+{% endif %}
+## This week's real trends
+
+{% for theme in report.themes %}
+### {{ loop.index }}. {{ theme.title }} `[{{ theme.axes.as_csv() }}]`
+
+{{ theme.why_it_matters }}
+Durability: **{{ theme.durability }}** · Leverage: **{{ theme.leverage }}**
+{% for item_id in theme.item_ids %}
+{% if item_id in items_by_id %}
+- [{{ items_by_id[item_id].title }}]({{ items_by_id[item_id].url }}) ({{ items_by_id[item_id].source }})
+{% endif %}
+{% endfor %}
+
+{% endfor %}
+## Build-of-the-week
+
+**{{ report.build_of_week.title }}**
+
+{{ report.build_of_week.description }}
+
+- Builds on: **{{ report.build_of_week.builds_on }}**
+- Prior art checked: {{ report.build_of_week.prior_art_checked }}
+- Result to publish: {{ report.build_of_week.result_to_publish }}
+- Draft post title: *{{ report.build_of_week.draft_post_title }}*
+
+## Lane check
+
+{{ report.lane_check }}
+
+{% if report.noise_filtered %}
+## Noise filtered
+
+{% for noise in report.noise_filtered %}
+- {{ noise }}
+{% endfor %}
+{% endif %}

@@ -1,0 +1,22 @@
+# {{ config.name }} — {{ date }}
+
+{% if warnings_block %}
+{{ warnings_block }}
+
+{% endif %}
+{% for section in sections %}
+## {{ section.title }}
+
+{% for item in section.entries %}
+- **[{{ item.title }}]({{ item.url }})** {% if item.axes %}`[{{ item.axes }}]`{% endif %}
+
+  {{ item.summary }} {{ item.why_it_matters }}
+  Apply ▸ [{{ item.apply_hook_effort }}] {{ item.apply_hook_action }} — via **{{ item.apply_hook_tool }}**
+{% endfor %}
+
+{% endfor %}
+{% if pattern_watch %}
+## Pattern watch
+
+{{ pattern_watch }}
+{% endif %}
