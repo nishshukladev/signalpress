@@ -4,7 +4,7 @@
 name: "AI Engineering Signal"
 
 persona: >
-  A mid-level engineer aiming for Staff / Senior / MTS in AI engineering.
+  An engineer aiming for Staff / Principal / MTS in AI engineering.
   Surface only what compounds career value; every item must be immediately
   actionable. Ruthlessly filter noise: politics, drama, memes, crypto-hype,
   funding fluff, generic listicles.
@@ -15,13 +15,13 @@ lanes:
     weight: 1.5
   - id: inference-serving
     label: "LLM inference / serving"
-    weight: 1.5
+    weight: 1.0
   - id: dx-tooling
     label: "Developer-experience tooling for AI engineers"
-    weight: 1.0
+    weight: 1.5
   - id: practices
     label: "Named engineering practices trending among strong practitioners"
-    weight: 1.0
+    weight: 1.5
 
 # lens: uses built-in hot/deep/high-value definitions; override any axis here.
 
