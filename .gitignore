@@ -9,3 +9,4 @@ digests/
 reports/
 newsletter.yaml
 .env
+.idea/

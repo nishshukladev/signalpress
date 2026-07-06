@@ -32,11 +32,11 @@ deterministic fetchers ──► LLM judgment (structured output) ──► SQLi
 
 ```bash
 uv tool install signalpress   # or: uv sync inside the repo
-signalpress init              # writes newsletter.yaml + creates signalpress.db
+uv run signalpress init              # writes newsletter.yaml + creates signalpress.db
 # edit newsletter.yaml; export ANTHROPIC_API_KEY (or OPENAI_API_KEY + change models)
-signalpress daily             # fetch -> judge -> gates -> digests/digest-YYYY-MM-DD.md
-signalpress weekly            # week's items -> pattern report + build-of-the-week
-signalpress trend             # judge-score & gate-failure trends across runs
+uv run signalpress daily             # fetch -> judge -> gates -> digests/digest-YYYY-MM-DD.md
+uv run signalpress weekly            # week's items -> pattern report + build-of-the-week
+uv run signalpress trend             # judge-score & gate-failure trends across runs
 ```
 
 Schedule it with cron / launchd / GitHub Actions — the tool is scheduler-agnostic by design.

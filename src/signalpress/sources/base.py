@@ -39,4 +39,4 @@ def normalize_url(url: str) -> str:
 # A fetcher takes its SourceConfig and a shared AsyncClient, returns candidates.
 Fetcher = Callable[[SourceConfig, httpx.AsyncClient], Awaitable[list[Candidate]]]
 
-DEFAULT_HEADERS = {"User-Agent": "signalpress/0.1 (+https://github.com/signalpress)"}
+DEFAULT_HEADERS = {"User-Agent": "signalpress/0.1 (+https://github.com/nishshukladev/signalpress)"}
