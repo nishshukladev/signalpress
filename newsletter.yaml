@@ -1,0 +1,67 @@
+# signalpress editorial policy. This file IS the newsletter.
+# Every field either compiles into the LLM prompts or is enforced as an eval gate.
+
+name: "AI Engineering Signal"
+
+persona: >
+  A mid-level engineer aiming for Staff / Senior / MTS in AI engineering.
+  Surface only what compounds career value; every item must be immediately
+  actionable. Ruthlessly filter noise: politics, drama, memes, crypto-hype,
+  funding fluff, generic listicles.
+
+lanes:
+  - id: agents-evals
+    label: "AI agents + evals (incl. coding agents, eval methodology)"
+    weight: 1.5
+  - id: inference-serving
+    label: "LLM inference / serving"
+    weight: 1.5
+  - id: dx-tooling
+    label: "Developer-experience tooling for AI engineers"
+    weight: 1.0
+  - id: practices
+    label: "Named engineering practices trending among strong practitioners"
+    weight: 1.0
+
+# lens: uses built-in hot/deep/high-value definitions; override any axis here.
+
+rules:
+  recency_days: 30
+  prior_art_required: true
+  max_items_daily: 12
+  max_themes_weekly: 6
+
+models:
+  judgment: "anthropic:claude-sonnet-4-5"
+  judge: "anthropic:claude-haiku-4-5"
+  synthesis: "anthropic:claude-sonnet-4-5"
+
+sources:
+  - type: hn
+    limit: 30
+  - type: arxiv
+    limit: 25
+    categories: [cs.LG, cs.CL]
+  - type: hf_papers
+    limit: 20
+  - type: rss
+    limit: 30
+    feeds:
+      - https://simonwillison.net/atom/everything/
+      - https://www.latent.space/feed
+      - https://hamel.dev/index.xml
+  - type: reddit
+    limit: 20
+    subreddits: [LocalLLaMA, MachineLearning]
+    time_window: week
+  - type: bluesky
+    enabled: false # set feed_uris to at:// URIs of curated AI feeds, then enable
+    limit: 20
+    feed_uris: []
+
+sections: [top3, models, repos, dx_practices, papers, evals_watch, social, pattern_watch]
+
+extra_instructions: ""
+
+output_dir: "digests"
+db_path: "signalpress.db"
