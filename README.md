@@ -56,8 +56,10 @@ practitioner blog) · Reddit (public feeds) · Bluesky feed generators (public A
 YouTube channels, GitHub releases) is a URL under `type: rss`. Sites without feeds: generate
 one with [RSSHub](https://docs.rsshub.app), [openrss.org](https://openrss.org), or
 [Kill the Newsletter](https://kill-the-newsletter.com) (email newsletters → feeds). Public
-JSON APIs: declare the endpoint and field paths under `type: json_api` — see
-`newsletter.example.yaml`.
+JSON APIs: declare the endpoint and field paths under `type: json_api` — see the annotated
+[example config](src/signalpress/templates/newsletter.example.yaml) (it ships inside the
+package so `signalpress init` works from any install) or this repo's own live
+[`newsletter.yaml`](newsletter.yaml), which powers the digests committed to `digests/`.
 
 Each source declares a mode: `api` (v1), `scrape-local` and `search-fallback` are reserved for
 sources without public APIs (e.g. X requires a local browser session and is deliberately out of
