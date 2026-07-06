@@ -49,7 +49,15 @@ done. Digests and the SQLite state are committed back to your fork after every r
 ## Sources (v1)
 
 Hacker News (Algolia API) · arXiv (export API) · Hugging Face daily papers · RSS/Atom (any
-practitioner blog) · Reddit (public JSON) · Bluesky feed generators (public AppView).
+practitioner blog) · Reddit (public feeds) · Bluesky feed generators (public AppView) ·
+**any JSON API** via the config-only `json_api` type.
+
+**Adding your own source needs no code.** Anything with an RSS/Atom feed (blogs, Substacks,
+YouTube channels, GitHub releases) is a URL under `type: rss`. Sites without feeds: generate
+one with [RSSHub](https://docs.rsshub.app), [openrss.org](https://openrss.org), or
+[Kill the Newsletter](https://kill-the-newsletter.com) (email newsletters → feeds). Public
+JSON APIs: declare the endpoint and field paths under `type: json_api` — see
+`newsletter.example.yaml`.
 
 Each source declares a mode: `api` (v1), `scrape-local` and `search-fallback` are reserved for
 sources without public APIs (e.g. X requires a local browser session and is deliberately out of

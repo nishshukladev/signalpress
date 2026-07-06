@@ -101,3 +101,14 @@ launchd, and GitHub Actions recipes are documented instead.
 **Alternatives:** Built-in APScheduler/daemon.
 **Tradeoff:** One less moving part to own; schedulers are a solved commodity and the "users
 control the schedule" requirement is satisfied by *their* scheduler, not ours.
+
+## D14 — Custom sources are config, not code
+**Decision:** Non-technical forkers never touch Python. RSS is the documented universal
+adapter (with RSSHub / openrss / Kill-the-Newsletter named for feed-less sites), and a generic
+`json_api` source type turns any public JSON endpoint into a source via url + items_path +
+field_map in YAML (dot-paths; date auto-detected epoch/ISO; unmappable rows skipped).
+**Alternatives:** Per-site fetcher modules forever (excludes non-coders); a full scraping DSL
+(rebuilds RSSHub, violates the prior-art rule).
+**Tradeoff:** json_api handles list-shaped GET endpoints only — no auth, pagination, or POST
+bodies. That's deliberate: the escape hatch for complex sources is a real fetcher module, and
+the 90% case (feeds + simple JSON) stays zero-code.

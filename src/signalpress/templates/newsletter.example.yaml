@@ -58,6 +58,21 @@ sources:
     enabled: false # set feed_uris to at:// URIs of curated AI feeds, then enable
     limit: 20
     feed_uris: []
+  # Add ANY site with an RSS/Atom feed under `type: rss` above (blogs, Substacks,
+  # YouTube channels, GitHub releases). No feed? rsshub.app / openrss.org /
+  # kill-the-newsletter.com generate one. And any public JSON API works with
+  # zero code via json_api - declare the URL and field paths:
+  - type: json_api
+    enabled: false # example: lobste.rs front page
+    name: lobsters
+    url: https://lobste.rs/hottest.json
+    items_path: "" # dot-path to the item list ('' = response root)
+    limit: 15
+    field_map:
+      title: title
+      url: url
+      published_at: created_at # epoch seconds/millis or ISO 8601, auto-detected
+      snippet: description_plain
 
 sections: [top3, models, repos, dx_practices, papers, evals_watch, social, pattern_watch]
 

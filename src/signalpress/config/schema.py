@@ -22,6 +22,7 @@ class SourceType(StrEnum):
     RSS = "rss"
     BLUESKY = "bluesky"
     REDDIT = "reddit"
+    JSON_API = "json_api"
 
 
 class SourceConfig(BaseModel):
@@ -35,6 +36,15 @@ class SourceConfig(BaseModel):
     subreddits: list[str] = Field(default_factory=list)  # reddit
     feed_uris: list[str] = Field(default_factory=list)  # bluesky at:// feed URIs
     time_window: str = "week"  # reddit top window
+    # json_api: turn any public JSON endpoint into a source with zero code
+    name: str = ""  # display name for this source (json_api; defaults to type)
+    url: str = ""  # endpoint URL
+    items_path: str = ""  # dot-path to the item list ('' = response root)
+    field_map: dict[str, str] = Field(
+        default_factory=dict,
+        description="item field -> dot-path; requires title and url; "
+        "optional published_at (epoch or ISO) and snippet",
+    )
 
 
 class Lane(BaseModel):

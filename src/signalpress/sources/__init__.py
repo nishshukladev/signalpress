@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import httpx
 
 from signalpress.config.schema import SourceConfig, SourceMode, SourceType
-from signalpress.sources import arxiv, bluesky, hf_papers, hn, reddit, rss
+from signalpress.sources import arxiv, bluesky, hf_papers, hn, json_api, reddit, rss
 from signalpress.sources.base import DEFAULT_HEADERS, Candidate, Fetcher
 
 REGISTRY: dict[SourceType, Fetcher] = {
@@ -16,6 +16,7 @@ REGISTRY: dict[SourceType, Fetcher] = {
     SourceType.RSS: rss.fetch,
     SourceType.BLUESKY: bluesky.fetch,
     SourceType.REDDIT: reddit.fetch,
+    SourceType.JSON_API: json_api.fetch,
 }
 
 
@@ -28,7 +29,7 @@ class FetchOutcome:
 
 
 async def _run_one(config: SourceConfig, client: httpx.AsyncClient) -> FetchOutcome:
-    name = config.type.value
+    name = config.name or config.type.value
     if config.mode is not SourceMode.API:
         return FetchOutcome(
             source=name, ok=False, candidates=[], error=f"mode {config.mode} not supported in v1"
