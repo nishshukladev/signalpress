@@ -41,6 +41,11 @@ uv run signalpress trend             # judge-score & gate-failure trends across 
 
 Schedule it with cron / launchd / GitHub Actions — the tool is scheduler-agnostic by design.
 
+**Fork-and-go:** the repo ships a scheduled workflow ([`.github/workflows/signalpress.yml`](.github/workflows/signalpress.yml)).
+Fork, enable Actions, commit your `newsletter.yaml` (`git add -f`), add an API-key secret —
+done. Digests and the SQLite state are committed back to your fork after every run. Details:
+[`docs/scheduling.md`](docs/scheduling.md).
+
 ## Sources (v1)
 
 Hacker News (Algolia API) · arXiv (export API) · Hugging Face daily papers · RSS/Atom (any

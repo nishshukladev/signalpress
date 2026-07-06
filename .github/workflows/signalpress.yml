@@ -1,0 +1,88 @@
+# Fork-and-go runner: daily digest + Saturday weekly report.
+#
+# Setup in your fork:
+#   1. Enable Actions (forks have scheduled workflows disabled by default).
+#   2. Locally: `uv run signalpress init`, edit newsletter.yaml, then commit it:
+#      `git add -f newsletter.yaml && git commit -m "my editorial policy" && git push`
+#      (it's gitignored in the template so the source repo stays config-free).
+#   3. Add your provider key as a repo secret: ANTHROPIC_API_KEY (or OPENAI_API_KEY
+#      and change the models in newsletter.yaml).
+#
+# State model: the SQLite DB and rendered digests are committed back after each
+# run - git is the persistence layer (single writer, one run/day, tiny file).
+
+name: signalpress
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # daily digest, 07:00 UTC
+    - cron: "0 8 * * 6" # weekly pattern report, Saturday 08:00 UTC
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "Which run to execute"
+        type: choice
+        options: [daily, weekly]
+        default: daily
+
+# Runs queue instead of overlapping (Saturday fires both crons; daily lands
+# first, then weekly reads the week's rows - including that morning's).
+concurrency:
+  group: signalpress
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for editorial policy
+        id: config
+        run: |
+          if [ -f newsletter.yaml ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No newsletter.yaml found. Run 'uv run signalpress init' locally, edit it, and 'git add -f newsletter.yaml' to commit it. Skipping."
+          fi
+
+      - name: Determine run kind
+        if: steps.config.outputs.present == 'true'
+        id: kind
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "kind=${{ inputs.kind }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 8 * * 6" ]; then
+            echo "kind=weekly" >> "$GITHUB_OUTPUT"
+          else
+            echo "kind=daily" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: astral-sh/setup-uv@v5
+        if: steps.config.outputs.present == 'true'
+
+      - name: Run pipeline
+        if: steps.config.outputs.present == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          uv sync --frozen
+          uv run signalpress ${{ steps.kind.outputs.kind }}
+
+      - name: Commit state back
+        if: steps.config.outputs.present == 'true'
+        run: |
+          git config user.name "signalpress-bot"
+          git config user.email "signalpress-bot@users.noreply.github.com"
+          git add -f signalpress.db digests/
+          if git commit -m "run(${{ steps.kind.outputs.kind }}): $(date -u +%F)"; then
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push
+          else
+            echo "nothing to commit"
+          fi
